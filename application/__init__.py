@@ -4,7 +4,7 @@ import logging
 import os
 
 
-app = Flask('application.cases')
+app = Flask(__name__)
 app.config.from_object(os.environ.get('SETTINGS'))
 
 if not app.debug:
