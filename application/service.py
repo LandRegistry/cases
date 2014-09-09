@@ -29,12 +29,21 @@ def get_case_items():
     return Case.query.order_by(Case.submitted_at).all()
 
 def update_case_with_work_queue(title_number, data):
-    logger.info("Received PUT case. %s" % data)
+    logger.info("Received update for case %s, set work_queue to %s" % (title_number, data))
     q = data.get('work_queue', None)
     if not q:
         return False
 
-    Case.query.filter_by(title_number = title_number).update(dict(work_queue=q))
+    Case.query.filter_by(title_number=title_number).update(dict(work_queue=q))
+    db.session.commit()
+    return True
+
+def update_case_with_status(title_number, new_status):
+    logger.info("Received update for case: %s, set status to %s" % (title_number, new_status))
+    if not new_status:
+        return False
+
+    Case.query.filter_by(title_number=title_number).update(dict(status=new_status))
     db.session.commit()
     return True
 

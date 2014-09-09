@@ -18,3 +18,5 @@ deploy:
   app: lr-cases
   on:
     repo: LandRegistry/cases
+    branch: master
+    run: "python manage.py db upgrade"

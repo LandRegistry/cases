@@ -40,3 +40,11 @@ def update_work_queue_for_case(title_number):
     return 'OK', 200
 
 
+@app.route('/cases/complete/<title_number>', methods=['PUT'])
+def complete_case(title_number):
+    if not service.update_case_with_status(title_number, new_status='complete'):
+        return 'Update to case: %s was not successful' % title_number, 400
+    return 'OK', 200
+
+
+

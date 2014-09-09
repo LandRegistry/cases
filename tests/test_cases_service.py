@@ -23,7 +23,7 @@ class CasesServiceTestCase(unittest.TestCase):
 
             post_response = self.client.post('/cases',
                                              data='{"title_number":"test_title", "application_type":"change_name", "request_details":"{some: details}", "work_queue":"casework", "submitted_by":"jo_user"}',
-                                             content_type = 'application/json')
+                                             content_type='application/json')
             self.assertEquals(post_response.status_code, 200)
             self.assertEquals(post_response.data, 'Saved case')
 
@@ -48,6 +48,7 @@ class CasesServiceTestCase(unittest.TestCase):
         self.assertEquals(response_after_post.status_code, 200)
         case = json.loads(response_after_post.data)[0]
         self.assertEquals(case['title_number'], title_number)
+        self.assertEquals(case['status'], 'pending')
         self.assertEquals(case['work_queue'], None)
         return response_after_post
 
@@ -77,3 +78,18 @@ class CasesServiceTestCase(unittest.TestCase):
             self.assertEquals(response.status_code, 400)
             self.assertEquals(response.data, 'Invalid data when updating the case for title: %s' % 'test_title2')
 
+
+
+    def test_update_case_with_work_queue_is_successful(self):
+        with self.app.test_request_context():
+            self.save_case_without_work_queue('test_title3')
+
+            self.client.put('/cases/complete/test_title3',
+                            content_type='application/json')
+            response_after_put = self.client.get('/cases')
+            self.assertEquals(response_after_put.status_code, 200)
+
+            case_after_save = json.loads(response_after_put.data)[0]
+
+            self.assertEquals(case_after_save['title_number'], 'test_title3')
+            self.assertEquals(case_after_save['status'], 'complete')
