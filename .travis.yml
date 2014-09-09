@@ -9,8 +9,8 @@ env:
 - SETTINGS=config.TestConfig
 script:
 - source ./environment_test.sh
-- ./db/create_database.sh
-- ./db/upgrade_database.sh
+- /home/travis/build/LandRegistry/cases/db/create_database.sh
+- /home/travis/build/LandRegistry/cases/db/upgrade_database.sh
 - py.test --cov application tests/ --cov-report=term --cov-report=html
 deploy:
   provider: heroku
