@@ -1,8 +1,3 @@
-source ./environment.sh
+#!/bin/bash
 
-set +o errexit
-createuser -s cases
-createdb -U cases -O cases cases -T template0
-
-python manage.py db upgrade
-python run_dev.py
+APP_ROOT=`pwd` bash ./run_dev.sh
