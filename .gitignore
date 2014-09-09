@@ -1,0 +1,10 @@
+*.db
+.DS_Store
+*.pyc
+*.iml
+casework/static/build
+casework/static/.webassets-cache
+.sass-cache
+dev/
+htmlcov/
+.coverage	
