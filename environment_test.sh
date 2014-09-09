@@ -1,2 +1,2 @@
-export SETTINGS='config.DevelopmentConfig'
-export DATABASE_URL='postgresql://localhost/cases'
+export SETTINGS='config.TestConfig'
+export DATABASE_URL='sqlite://'
