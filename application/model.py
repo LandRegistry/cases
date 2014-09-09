@@ -1,5 +1,7 @@
 import datetime
 from pytz import timezone
+from sqlalchemy import TEXT
+from sqlalchemy.dialects.postgresql import JSON
 
 from application import db
 
@@ -10,7 +12,7 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column(db.String(64), nullable=False)
     application_type = db.Column(db.String(50), nullable=False)
-    request_details = db.Column(db.String(1000)) #nullable    # TODO: should be a JSON
+    request_details = db.Column(TEXT) #nullable    # TODO: should be a JSON
     status = db.Column(db.String(100)) #pending/complete
     work_queue = db.Column(db.String(100))
     submitted_at = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
