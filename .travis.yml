@@ -19,4 +19,4 @@ deploy:
   on:
     repo: LandRegistry/cases
     branch: master
-    run: "python manage.py db upgrade"
+  run: "python manage.py db upgrade"
