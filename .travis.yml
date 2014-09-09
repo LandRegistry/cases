@@ -1,0 +1,20 @@
+language: python
+python:
+- '2.7'
+install:
+- pip install -r requirements.txt
+- pip install -r requirements_test.txt
+- pip install python-coveralls
+env:
+- SETTINGS=config.TestConfig
+script:
+- source ./environment_test.sh
+- /home/travis/build/LandRegistry/cases/db/create_database.sh
+- py.test --cov application tests/ --cov-report=term --cov-report=html
+deploy:
+  provider: heroku
+  api_key:
+    secure: H0DhdQOa0cKqJ6UVwt6CFCfjnNweEW8a4jC0NCkIcomWXFPCo4SIeLZvVTnmS5Y+0MFsSJg75xqPhvsH4XA6E1Nng8ym6OMGLR1vC8VY2Osm7uSAmJ8qf3D8wkQ1Hr2wjBF/1hMjl+hHhO9i68CvTIpRV14i3rhi14gJ0C/7rYA=
+  app: lr-cases
+  on:
+    repo: LandRegistry/cases
