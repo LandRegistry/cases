@@ -9,6 +9,8 @@ env:
 - SETTINGS=config.TestConfig
 script:
 - source ./environment_test.sh
+- ./create_database.sh
+- ./upgrade_database.sh
 - py.test --cov application tests/ --cov-report=term --cov-report=html
 deploy:
   provider: heroku
