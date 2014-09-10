@@ -51,5 +51,13 @@ def complete_case(title_number):
         return 'Update to case: %s was not successful' % title_number, 400
     return 'OK', 200
 
+@app.route('/cases/queue/<work_queue>', methods=['GET'])
+def get_cases_by_queue(work_queue):
+    return Response(json.dumps([i.serialize for i in service.get_cases_by_queue(work_queue)]), mimetype='application/json')
+
+@app.route('/cases/property/<title_number>', methods=['GET'])
+def get_cases_by_title(title_number):
+    return Response(json.dumps([i.serialize for i in service.get_cases_by_title(title_number)]), mimetype='application/json')
+
 
 
