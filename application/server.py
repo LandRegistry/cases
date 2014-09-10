@@ -17,12 +17,17 @@ def index():
 @app.route('/cases', methods=['POST'])
 def casework_post():
     try:
-        service.save_case(json.loads(request.data))
+        service.save_case(request.get_json())
     except IntegrityError:
+        print 'Failed to save'
         return 'Failed to save casework item.', 400
     except KeyError as e:
         logger.error(e.message)
+        print 'Invalid data'
         return 'Invalid data', 400
+    except Exception as e:
+        print 'Unknown error.', e
+        return 'Unknown error.', 400
 
     return 'Saved case', 200
 
@@ -33,7 +38,7 @@ def get_cases():
 @app.route('/cases/<title_number>', methods=(['PUT']))
 def update_work_queue_for_case(title_number):
     try:
-        if not service.update_case_with_work_queue(title_number, request.data):
+        if not service.update_case_with_work_queue(title_number, request.json):
             return 'Invalid data when updating the case for title: %s' % title_number, 400
     except KeyError as e:
         return 'Invalid data when updating the case for title: %s' % title_number, 400
