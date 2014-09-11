@@ -33,7 +33,7 @@ def handle_case(case):
         decision_response, downstream_response, work_queue = decision.post(details)
         logger.info("Downstream response: %s" % downstream_response)
         if decision_response and downstream_response and downstream_response.status_code / 100 == 2:
-            service.update_case_with_dict(case.title_number, {'work_queue': work_queue, 'status': 'queued'})
+            service.update_case_with_dict(case.id, {'work_queue': work_queue, 'status': 'queued'})
         else:
             logger.error("Failure when posting to decision, details = %s" % details)
 

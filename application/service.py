@@ -54,10 +54,10 @@ def update_case_with_status(title_number, new_status):
     db.session.commit()
     return True
 
-def update_case_with_dict(title_number, data):
-    logger.info("Received update for case %s, update with %s" % (title_number, data))
+def update_case_with_dict(case_id, data):
+    logger.info("Received update for case %s, update with %s" % (case_id, data))
 
-    Case.query.filter_by(title_number=title_number).update(data)
+    Case.query.filter_by(id=case_id).update(data)
     db.session.commit()
     return True
 
