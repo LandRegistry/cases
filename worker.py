@@ -2,6 +2,7 @@ from application import service
 import time
 import logging
 import os
+import json
 
 from application.decision import Decision
 
@@ -26,13 +27,15 @@ def process_pending_cases():
 
 def handle_case(case):
     if case:
-        logger.info("Sending case to decision: %s" % case)
-        decision_response, downstream_response = decision.post(case.serialize())
-        logger.info("Downstream response %s" % downstream_response)
-        if decision_response and downstream_response:
-            logger.info("Dunno")
+        logger.debug("Sending case to decision: %s" % case.serialize)
+        details = json.loads(case.serialize['request_details'])
+        logger.info('request details %s , %s' % (type(details), details))
+        decision_response, downstream_response, work_queue = decision.post(details)
+        logger.info("Downstream response: %s" % downstream_response)
+        if decision_response and downstream_response and downstream_response.status_code / 100 == 2:
+            service.update_case_with_dict(case.title_number, {'work_queue': work_queue, 'status': 'queued'})
         else:
-            logger.error("Failure")
+            logger.error("Failure when posting to decision, details = %s" % details)
 
 
 if __name__ == '__main__':

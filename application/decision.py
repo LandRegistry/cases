@@ -2,6 +2,8 @@ import requests
 import json
 from application import app
 from requests.auth import HTTPBasicAuth
+import os
+import string
 
 headers = {'content-type': 'application/json'}
 
@@ -10,12 +12,19 @@ class Decision(object):
 
     def __init__(self, decision_url):
         self.api = '%s/decisions' % decision_url
+        if 'BASIC_AUTH_USERNAME' in os.environ:
+            self.auth = HTTPBasicAuth(
+                        os.environ['BASIC_AUTH_USERNAME'],
+                        os.environ['BASIC_AUTH_PASSWORD'])
+        else:
+            self.auth = None
 
     def post(self, data):
         decision_response = self._post_decision(data).json()
         url = decision_response['url']
         downstream_response = self._post_downstream(url, data)
-        return (decision_response, downstream_response)
+        work_queue = string.split(url, '/')[3]
+        return (decision_response, downstream_response, work_queue)
 
     def _post_decision(self, data):
         try:
@@ -25,24 +34,20 @@ class Decision(object):
                     self.api,
                     data=json_data,
                     headers=headers,
-                    auth=HTTPBasicAuth(
-                        app.config['BASIC_AUTH_USERNAME'],
-                        app.config['BASIC_AUTH_PASSWORD']))
+                    auth=self.auth)
         except requests.exceptions.RequestException as e:
             app.logger.error("Could not effect decision at %s: Error %s" % (self.api, e))
             raise RuntimeError
 
     def _post_downstream(self, url, data):
         try:
-            json_data = self._payload_downstream(data)
+            json_data = data['data']
             app.logger.info("Sending data %s to the downstream at %s" % (json_data, url))
             return requests.post(
                     url,
                     data=json_data,
                     headers=headers,
-                    auth=HTTPBasicAuth(
-                        app.config['BASIC_AUTH_USERNAME'],
-                        app.config['BASIC_AUTH_PASSWORD']))
+                    auth=self.auth)
         except requests.exceptions.RequestException as e:
             app.logger.error("Could not effect decision at %s: Error %s" % (self.api, e))
             raise RuntimeError
@@ -51,21 +56,14 @@ class Decision(object):
         return self.api
 
     def _payload_decision(self, data):
+        payload = json.loads(data['data'])
         return json.dumps({
-               "action": "change-name-marriage",
+               "action": data['action'],
                "data": {
-                   "iso-country-code": data['marriage_country']
+                   "iso-country-code": payload['marriage_country']
                },
                "context": {
                    "session-id": "123456",
                    "transaction-id": "ABCDEFG"
                }
            })
-
-    def _payload_downstream(self, data):
-        # date hack until we can settle on data formats/handling/ser/deser
-        dt = data.pop('marriage_date')
-        data['marriage_date'] = long(dt.strftime("%s"))
-
-        data['application_type'] = 'change-name-marriage'
-        return json.dumps(data)
