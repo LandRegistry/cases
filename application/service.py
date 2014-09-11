@@ -54,4 +54,12 @@ def update_case_with_status(title_number, new_status):
     db.session.commit()
     return True
 
+def update_case_with_dict(case_id, data):
+    logger.info("Received update for case %s, update with %s" % (case_id, data))
 
+    Case.query.filter_by(id=case_id).update(data)
+    db.session.commit()
+    return True
+
+def get_next_pending_case():
+    return Case.query.filter_by(status='pending').order_by(Case.submitted_at).first()
