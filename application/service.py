@@ -1,3 +1,4 @@
+import json
 import logging
 
 from application import db
@@ -14,7 +15,7 @@ def save_case(data):
     case = Case()
     case.title_number = data.get('title_number')
     case.application_type = data.get('application_type')
-    case.request_details = data.get('request_details')
+    case.request_details = json.dumps(data.get('request_details'))
     case.status = 'pending'
     q = data.get('work_queue', None)
     if q:

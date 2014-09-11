@@ -17,12 +17,17 @@ def index():
 @app.route('/cases', methods=['POST'])
 def casework_post():
     try:
-        service.save_case(request.json)
+        service.save_case(request.get_json())
     except IntegrityError:
+        print 'Failed to save'
         return 'Failed to save casework item.', 400
     except KeyError as e:
         logger.error(e.message)
+        print 'Invalid data'
         return 'Invalid data', 400
+    except Exception as e:
+        print 'Unknown error.', e
+        return 'Unknown error.', 400
 
     return 'Saved case', 200
 
