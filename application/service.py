@@ -29,6 +29,12 @@ def save_case(data):
 def get_case_items():
     return Case.query.order_by(Case.submitted_at).all()
 
+def get_cases_by_queue(work_queue):
+    return Case.query.filter(Case.work_queue == work_queue).order_by(Case.submitted_at).all()
+
+def get_cases_by_title(title_number):
+    return Case.query.filter(Case.title_number == title_number).order_by(Case.submitted_at).all()
+
 def update_case_with_work_queue(title_number, data):
     logger.info("Received update for case %s, set work_queue to %s" % (title_number, data))
     q = data.get('work_queue', None)
