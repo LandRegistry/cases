@@ -20,11 +20,10 @@ class Decision(object):
             self.auth = None
 
     def post(self, data):
-        decision_response = self._post_decision(data).json()
-        url = decision_response['url']
-        downstream_response = self._post_downstream(url, data)
+        decision_response = self._post_decision(data)
+        url = decision_response.json()['url']
         work_queue = string.split(url, '/')[3]
-        return (decision_response, downstream_response, work_queue)
+        return (decision_response, work_queue)
 
     def _post_decision(self, data):
         try:
