@@ -7,8 +7,8 @@ import string
 
 headers = {'content-type': 'application/json'}
 
-class Decision(object):
 
+class Decision(object):
 
     def __init__(self, decision_url):
         self.api = '%s/decisions' % decision_url
@@ -31,19 +31,6 @@ class Decision(object):
             app.logger.info("Sending data %s to the decision at %s" % (json_data, self.api))
             return requests.post(
                     self.api,
-                    data=json_data,
-                    headers=headers,
-                    auth=self.auth)
-        except requests.exceptions.RequestException as e:
-            app.logger.error("Could not effect decision at %s: Error %s" % (self.api, e))
-            raise RuntimeError
-
-    def _post_downstream(self, url, data):
-        try:
-            json_data = data['data']
-            app.logger.info("Sending data %s to the downstream at %s" % (json_data, url))
-            return requests.post(
-                    url,
                     data=json_data,
                     headers=headers,
                     auth=self.auth)

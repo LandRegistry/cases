@@ -62,4 +62,4 @@ def update_case_with_dict(case_id, data):
     return True
 
 def get_next_pending_case():
-    return Case.query.filter_by(status='pending').first()
+    return Case.query.filter_by(status='pending').order_by(Case.submitted_at).first()
