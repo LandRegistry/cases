@@ -47,4 +47,5 @@ def update_case_with_status(title_number, new_status):
     db.session.commit()
     return True
 
-
+def get_next_pending_case():
+    return Case.query.filter_by(status='pending').first()
