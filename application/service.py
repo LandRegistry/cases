@@ -45,12 +45,12 @@ def update_case_with_work_queue(title_number, data):
     db.session.commit()
     return True
 
-def update_case_with_status(title_number, new_status):
-    logger.info("Received update for case: %s, set status to %s" % (title_number, new_status))
+def update_case_with_status(case_id, new_status):
+    logger.info("Received update for case: %s, set status to %s" % (case_id, new_status))
     if not new_status:
         return False
 
-    Case.query.filter_by(title_number=title_number).update(dict(status=new_status))
+    Case.query.filter_by(id=case_id).update(dict(status=new_status))
     db.session.commit()
     return True
 
