@@ -17,6 +17,7 @@ def save_case(data):
     case.application_type = data.get('application_type')
     case.request_details = json.dumps(data.get('request_details'))
     case.status = 'pending'
+    case.title = json.dumps(data.get('title'))
     q = data.get('work_queue', None)
     if q:
         case.work_queue = q
@@ -47,7 +48,8 @@ def update_case_with_work_queue(case_id, data):
 
 def update_case_with_status(case_id, new_status):
     logger.info("Received update for case: %s, set status to %s" % (case_id, new_status))
-    if not new_status:
+    if new_status not in ['pending', 'queued', 'approved']:
+        logger.error('[%s] is an invalid choice for status of a case' % new_status)
         return False
 
     Case.query.filter_by(id=case_id).update(dict(status=new_status))
@@ -63,3 +65,6 @@ def update_case_with_dict(case_id, data):
 
 def get_next_pending_case():
     return Case.query.filter_by(status='pending').order_by(Case.submitted_at).first()
+
+def get_next_approved_case():
+    return Case.query.filter_by(status='approved').order_by(Case.submitted_at).first()

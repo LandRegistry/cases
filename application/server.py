@@ -39,16 +39,16 @@ def get_cases():
 def update_work_queue_for_case(case_id):
     try:
         if not service.update_case_with_work_queue(case_id, request.json):
-            return 'Invalid data when updating the case for title: %s' % case_id, 400
+            return 'Invalid data when updating the id for case: %s' % case_id, 400
     except KeyError as e:
-        return 'Invalid data when updating the case for title: %s' % case_id, 400
+        return 'Invalid data when updating the id for case: %s' % case_id, 400
     return 'OK', 200
 
 
 @app.route('/cases/complete/<title_number>', methods=['PUT'])
 def complete_case(title_number):
-    if not service.update_case_with_status(title_number, new_status='complete'):
-        return 'Update to case: %s was not successful' % title_number, 400
+    if not service.update_case_with_status(title_number, new_status='approved'):
+        return 'Approval of the case: %s was not successful.' % title_number, 400
     return 'OK', 200
 
 @app.route('/cases/<status>/<work_queue>', methods=['GET'])

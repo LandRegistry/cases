@@ -23,7 +23,8 @@ class CasesServiceTestCase(unittest.TestCase):
 
             post_response = self.client.post('/cases',
                                              data=json.dumps({"title_number":"test_title", "application_type":"change_name",
-                                                              "request_details":{"some": "details"}, "work_queue":"casework", "submitted_by":"jo_user"}),
+                                                              "request_details":{"some": "details"}, "work_queue":"casework", "submitted_by":"jo_user",
+                                                              "title":{"name":"bob","other":"stuff"}}),
                                              headers={'content-type': 'application/json'})
             self.assertEquals(post_response.status_code, 200)
             self.assertEquals(post_response.data, 'Saved case')
@@ -42,7 +43,8 @@ class CasesServiceTestCase(unittest.TestCase):
     def save_case_without_work_queue(self, title_number):
         post_response = self.client.post('/cases',
                                          data=json.dumps({"title_number":title_number, "application_type":"change_name",
-                                                          "request_details":{"some": "details"}, "submitted_by":"jo_user"}),
+                                                          "request_details":{"some": "details"}, "submitted_by":"jo_user",
+                                                          "title":{"name":"bob","other":"stuff"}}),
                                          headers= {'content-type': 'application/json'})
         self.assertEquals(post_response.status_code, 200)
         self.assertEquals(post_response.data, 'Saved case')
@@ -69,7 +71,6 @@ class CasesServiceTestCase(unittest.TestCase):
             self.assertEquals(case_after_save['title_number'], 'test_title1')
             self.assertEquals(case_after_save['work_queue'], 'casework')
 
-
     def update_case_without_work_queue_fails(self):
         with self.app.test_request_context():
             self.save_case_without_work_queue('test_title2')
@@ -80,11 +81,14 @@ class CasesServiceTestCase(unittest.TestCase):
             self.assertEquals(response.status_code, 400)
             self.assertEquals(response.data, 'Invalid data when updating the case for title: %s' % 'test_title2')
 
-    def update_case_with_work_queue_is_successful(self):
+    def test_approve_case_is_successful(self):
         with self.app.test_request_context():
             self.save_case_without_work_queue('test_title3')
+            case = self.client.get("/cases")
 
-            self.client.put('/cases/complete/test_title3',
+            case_id = json.loads(case.data)[0]['id']
+
+            self.client.put('/cases/complete/%s'% case_id,
                             headers={'content-type': 'application/json'})
             response_after_put = self.client.get('/cases')
             self.assertEquals(response_after_put.status_code, 200)
@@ -92,12 +96,13 @@ class CasesServiceTestCase(unittest.TestCase):
             case_after_save = json.loads(response_after_put.data)[0]
 
             self.assertEquals(case_after_save['title_number'], 'test_title3')
-            self.assertEquals(case_after_save['status'], 'complete')
+            self.assertEquals(case_after_save['status'], 'approved')
 
     def post_case(self, title, queue):
         post_response = self.client.post('/cases',
                                          data=json.dumps({"title_number": title, "application_type": "change_name",
-                                                          "request_details": {"some": "details"}, "work_queue": queue, "submitted_by": "jo_user"}),
+                                                          "request_details": {"some": "details"}, "work_queue": queue, "submitted_by": "jo_user",
+                                                          "title":{"name":"bob","other":"stuff"}}),
                                          headers={'content-type': 'application/json'})
         self.assertEquals(post_response.status_code, 200)
 
