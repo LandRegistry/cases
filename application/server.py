@@ -35,25 +35,25 @@ def casework_post():
 def get_cases():
     return Response(json.dumps([i.serialize for i in service.get_case_items()]), mimetype='application/json')
 
-@app.route('/cases/<title_number>', methods=(['PUT']))
-def update_work_queue_for_case(title_number):
+@app.route('/cases/<case_id>', methods=(['PUT']))
+def update_work_queue_for_case(case_id):
     try:
-        if not service.update_case_with_work_queue(title_number, request.json):
-            return 'Invalid data when updating the case for title: %s' % title_number, 400
+        if not service.update_case_with_work_queue(case_id, request.json):
+            return 'Invalid data when updating the id for case: %s' % case_id, 400
     except KeyError as e:
-        return 'Invalid data when updating the case for title: %s' % title_number, 400
+        return 'Invalid data when updating the id for case: %s' % case_id, 400
     return 'OK', 200
 
 
 @app.route('/cases/complete/<title_number>', methods=['PUT'])
 def complete_case(title_number):
-    if not service.update_case_with_status(title_number, new_status='complete'):
-        return 'Update to case: %s was not successful' % title_number, 400
+    if not service.update_case_with_status(title_number, new_status='approved'):
+        return 'Approval of the case: %s was not successful.' % title_number, 400
     return 'OK', 200
 
-@app.route('/cases/queue/<work_queue>', methods=['GET'])
-def get_cases_by_queue(work_queue):
-    return Response(json.dumps([i.serialize for i in service.get_cases_by_queue(work_queue)]), mimetype='application/json')
+@app.route('/cases/<status>/<work_queue>', methods=['GET'])
+def get_cases_by_queue(status, work_queue):
+    return Response(json.dumps([i.serialize for i in service.get_cases_by_status_and_queue(status, work_queue)]), mimetype='application/json')
 
 @app.route('/cases/property/<title_number>', methods=['GET'])
 def get_cases_by_title(title_number):

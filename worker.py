@@ -16,7 +16,7 @@ decision = Decision(os.environ['DECISION_URL'])
 def process_pending_cases():
     while 1:
 
-        time.sleep(5)
+        time.sleep(1)
 
         try:
             case = service.get_next_pending_case()
