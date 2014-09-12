@@ -111,14 +111,14 @@ class CasesServiceTestCase(unittest.TestCase):
             cases = json.loads(response.data)
             self.assertEquals(len(cases), 2)
 
-            response = self.client.get('/cases/queue/casework')
+            response = self.client.get('/cases/pending/casework')
             self.assertEquals(response.status_code, 200)
             cases = json.loads(response.data)
             self.assertEquals(cases[0]['title_number'], 'title5')
             self.assertEquals(cases[0]['work_queue'], 'casework')
             self.assertEquals(len(cases), 1)
 
-            check_response = self.client.get('/cases/queue/check')
+            check_response = self.client.get('/cases/pending/check')
             self.assertEquals(check_response.status_code, 200)
             checks = json.loads(check_response.data)
             self.assertEquals(checks[0]['title_number'], 'title6')

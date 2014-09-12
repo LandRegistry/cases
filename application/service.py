@@ -29,19 +29,19 @@ def save_case(data):
 def get_case_items():
     return Case.query.order_by(Case.submitted_at).all()
 
-def get_cases_by_queue(work_queue):
-    return Case.query.filter(Case.work_queue == work_queue).order_by(Case.submitted_at).all()
+def get_cases_by_status_and_queue(status, work_queue):
+    return Case.query.filter(Case.status == status).filter(Case.work_queue == work_queue).order_by(Case.submitted_at).all()
 
 def get_cases_by_title(title_number):
     return Case.query.filter(Case.title_number == title_number).order_by(Case.submitted_at).all()
 
-def update_case_with_work_queue(title_number, data):
-    logger.info("Received update for case %s, set work_queue to %s" % (title_number, data))
+def update_case_with_work_queue(case_id, data):
+    logger.info("Received update for case %s, set work_queue to %s" % (case_id, data))
     q = data.get('work_queue', None)
     if not q:
         return False
 
-    Case.query.filter_by(title_number=title_number).update(dict(work_queue=q))
+    Case.query.filter_by(id=case_id).update(dict(work_queue=q))
     db.session.commit()
     return True
 
