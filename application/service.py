@@ -17,7 +17,6 @@ def save_case(data):
     case.application_type = data.get('application_type')
     case.request_details = json.dumps(data.get('request_details'))
     case.status = 'pending'
-    case.title = json.dumps(data.get('title'))
     q = data.get('work_queue', None)
     if q:
         case.work_queue = q

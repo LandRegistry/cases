@@ -17,7 +17,6 @@ class Case(db.Model):
     work_queue = db.Column(db.String(100))
     submitted_at = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
     submitted_by = db.Column(db.String(200))
-    title = db.Column(TEXT) #Title with change applied.
 
     @property
     def submitted_at_bst(self):
@@ -36,8 +35,7 @@ class Case(db.Model):
             'status' : self.status,
             'work_queue' : self.work_queue,
             'submitted_by': self.submitted_by,
-            'submitted_at': datetime.datetime.strftime(self.submitted_at, '%d-%m-%Y %H:%M:%S %f'),
-            'title': self.title
+            'submitted_at': datetime.datetime.strftime(self.submitted_at, '%d-%m-%Y %H:%M:%S %f')
         }
 
 
