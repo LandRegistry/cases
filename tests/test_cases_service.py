@@ -23,7 +23,7 @@ class CasesServiceTestCase(unittest.TestCase):
 
             post_response = self.client.post('/cases',
                                              data=json.dumps({"title_number":"test_title", "application_type":"change_name",
-                                                              "request_details":{"some": "details"}, "work_queue":"casework", "submitted_by":"jo_user"}),
+                                                              "request_details":{"data": "{\"some\":\"detail\"}"}, "work_queue":"casework", "submitted_by":"jo_user"}),
                                              headers={'content-type': 'application/json'})
             self.assertEquals(post_response.status_code, 200)
             self.assertEquals(post_response.data, 'Saved case')
@@ -42,7 +42,7 @@ class CasesServiceTestCase(unittest.TestCase):
     def save_case_without_work_queue(self, title_number):
         post_response = self.client.post('/cases',
                                          data=json.dumps({"title_number":title_number, "application_type":"change_name",
-                                                          "request_details":{"some": "details"}, "submitted_by":"jo_user"}),
+                                                          "request_details":{"data": "{\"some\":\"detail\"}"}, "submitted_by":"jo_user"}),
                                          headers= {'content-type': 'application/json'})
         self.assertEquals(post_response.status_code, 200)
         self.assertEquals(post_response.data, 'Saved case')
@@ -99,7 +99,7 @@ class CasesServiceTestCase(unittest.TestCase):
     def post_case(self, title, queue):
         post_response = self.client.post('/cases',
                                          data=json.dumps({"title_number": title, "application_type": "change_name",
-                                                          "request_details": {"some": "details"}, "work_queue": queue, "submitted_by": "jo_user"}),
+                                                          "request_details":{"data": "{\"some\":\"detail\"}"}, "work_queue": queue, "submitted_by": "jo_user"}),
                                          headers={'content-type': 'application/json'})
         self.assertEquals(post_response.status_code, 200)
 
