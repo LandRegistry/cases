@@ -47,7 +47,7 @@ def update_case_with_work_queue(case_id, data):
 
 def update_case_with_status(case_id, new_status):
     logger.info("Received update for case: %s, set status to %s" % (case_id, new_status))
-    if new_status not in ['pending', 'queued', 'approved']:
+    if new_status not in ['pending', 'queued', 'approved', 'completed', 'wait', 'error']:
         logger.error('[%s] is an invalid choice for status of a case' % new_status)
         return False
 
