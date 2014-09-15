@@ -1,10 +1,10 @@
 import datetime
+import json
+import logging
 from pytz import timezone
 from sqlalchemy import TEXT
-from sqlalchemy.dialects.postgresql import JSON
 
 from application import db
-
 
 class Case(db.Model):
     __tablename__ = 'cases'
@@ -31,7 +31,8 @@ class Case(db.Model):
             'id': self.id,
             'title_number': self.title_number,
             'application_type': self.application_type,
-            'request_details' : self.request_details,
+            'request_details' : json.loads(self.request_details),
+            'request_details_data' : json.loads((json.loads(self.request_details))['data']),
             'status' : self.status,
             'work_queue' : self.work_queue,
             'submitted_by': self.submitted_by,
