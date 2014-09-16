@@ -45,10 +45,10 @@ def update_work_queue_for_case(case_id):
     return 'OK', 200
 
 
-@app.route('/cases/complete/<title_number>', methods=['PUT'])
-def complete_case(title_number):
-    if not service.update_case_with_status(title_number, new_status='approved'):
-        return 'Approval of the case: %s was not successful.' % title_number, 400
+@app.route('/cases/complete/<case_id>', methods=['PUT'])
+def complete_case(case_id):
+    if not service.update_case_with_status(case_id, new_status='approved'):
+        return 'Approval of the case: %s was not successful.' % case_id, 400
     return 'OK', 200
 
 @app.route('/cases/<status>/<work_queue>', methods=['GET'])
