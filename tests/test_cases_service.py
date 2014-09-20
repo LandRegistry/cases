@@ -15,7 +15,7 @@ class CasesServiceTestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    def save_cases_and_get_cases_returns_the_cases(self):
+    def test_save_cases_and_get_cases_returns_the_cases(self):
         with self.app.test_request_context():
             empty_response = self.client.get('/cases')
             self.assertEquals(empty_response.status_code, 200)
@@ -35,7 +35,7 @@ class CasesServiceTestCase(unittest.TestCase):
 
             self.assertEquals(case['title_number'], 'test_title')
             self.assertEquals(case['application_type'], 'change_name')
-            self.assertEquals(case['request_details'], '{"some": "details"}')
+            self.assertEquals(case['request_details'], '{"data": "{\\"some\\":\\"detail\\"}"}')
             self.assertEquals(case['work_queue'], 'casework')
             self.assertEquals(case['submitted_by'], 'jo_user')
 
@@ -54,14 +54,14 @@ class CasesServiceTestCase(unittest.TestCase):
         self.assertEquals(case['work_queue'], None)
         return response_after_post
 
-    def update_case_with_work_queue_is_successful(self):
+    def test_update_case_with_work_queue_is_successful(self):
         with self.app.test_request_context():
-            self.save_case_without_work_queue('test_title1')
-
-            self.client.put('/cases/test_title1',
+            response = self.save_case_without_work_queue('test_title1')
+            self.client.put('/cases/%s' % json.loads(response.data)[0]['id'],
                             data=json.dumps({"work_queue": "casework"}),
                             headers={'content-type': 'application/json'})
             response_after_put = self.client.get('/cases')
+
             self.assertEquals(response_after_put.status_code, 200)
 
             case_after_save = json.loads(response_after_put.data)[0]
@@ -69,7 +69,7 @@ class CasesServiceTestCase(unittest.TestCase):
             self.assertEquals(case_after_save['title_number'], 'test_title1')
             self.assertEquals(case_after_save['work_queue'], 'casework')
 
-    def update_case_without_work_queue_fails(self):
+    def test_update_case_without_work_queue_fails(self):
         with self.app.test_request_context():
             self.save_case_without_work_queue('test_title2')
             response = self.client.put('/cases/test_title2',
@@ -77,7 +77,7 @@ class CasesServiceTestCase(unittest.TestCase):
                             headers={'content-type': 'application/json'})
 
             self.assertEquals(response.status_code, 400)
-            self.assertEquals(response.data, 'Invalid data when updating the case for title: %s' % 'test_title2')
+            self.assertEquals(response.data, 'Invalid data when updating the id for case: %s' % 'test_title2')
 
     def test_approve_case_is_successful(self):
         with self.app.test_request_context():
