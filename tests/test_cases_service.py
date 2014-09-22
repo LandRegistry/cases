@@ -1,8 +1,7 @@
 import json
 import unittest
 from application.server import app
-from application import db
-
+from application import db, service
 
 class CasesServiceTestCase(unittest.TestCase):
     def setUp(self):
@@ -147,4 +146,43 @@ class CasesServiceTestCase(unittest.TestCase):
             self.assertEquals(cases[0]['work_queue'], 'casework')
             self.assertEquals(cases[1]['title_number'], 'title5')
             self.assertEquals(cases[1]['work_queue'], 'check')
+
+    def test_complete_case_returns_error_if_already_been_approved(self):
+        with self.app.test_request_context():
+            self.post_case('title7', 'casework')
+            response = self.client.get('/cases/property/title7')
+            self.assertEquals(response.status_code, 200)
+            case_id = json.loads(response.data)[0]['id']
+
+            first_response = self.client.put('/cases/complete/%s' % case_id)
+            self.assertEquals(first_response.status_code, 200)
+
+            second_response = self.client.put('/cases/complete/%s' % case_id)
+            self.assertEquals(second_response.status_code, 400)
+            self.assertEquals(second_response.data, 'Case: %s has already been approved' % case_id)
+
+    def test_get_cases_by_work_queue_returns_cases_for_status_plus_error(self):
+        with self.app.test_request_context():
+            self.post_case('title8', 'casework')
+            self.post_case('title9', 'casework')
+
+            response = self.client.get('/cases')
+            self.assertEquals(response.status_code, 200)
+            cases = json.loads(response.data)
+            self.assertEquals(len(cases), 2)
+
+            self.assertTrue(service.update_case_with_status(cases[1]['id'], 'error'))
+
+            response = self.client.get('/cases/pending/casework')
+            self.assertEquals(response.status_code, 200)
+            cases = json.loads(response.data)
+            self.assertEquals(len(cases), 2)
+            self.assertEquals(cases[0]['title_number'], 'title8')
+            self.assertEquals(cases[0]['work_queue'], 'casework')
+            self.assertEquals(cases[0]['status'], 'pending')
+            self.assertEquals(cases[1]['title_number'], 'title9')
+            self.assertEquals(cases[1]['work_queue'], 'casework')
+            self.assertEquals(cases[1]['status'], 'error')
+
+
 

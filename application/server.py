@@ -47,6 +47,10 @@ def update_work_queue_for_case(case_id):
 
 @app.route('/cases/complete/<case_id>', methods=['PUT'])
 def complete_case(case_id):
+    case_to_update = service.get_case(case_id)
+    if case_to_update.status in ['approved', 'completed']:
+        logger.error('Case: %s has already been approved' % case_id)
+        return 'Case: %s has already been approved' % case_id, 400
     if not service.update_case_with_status(case_id, new_status='approved'):
         return 'Approval of the case: %s was not successful.' % case_id, 400
     return 'OK', 200

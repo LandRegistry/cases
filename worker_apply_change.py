@@ -29,7 +29,6 @@ def process_approved_cases():
 
 def submit_change_to_mint(case):
     if case:
-        #TODO: add title to case
         case_id = case.id
         service.update_case_with_status(case_id, 'wait')
 
