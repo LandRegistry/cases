@@ -30,7 +30,7 @@ def get_case_items():
     return Case.query.order_by(Case.submitted_at).all()
 
 def get_cases_by_status_and_queue(status, work_queue):
-    return Case.query.filter(Case.status == status).filter(Case.work_queue == work_queue).order_by(Case.submitted_at).all()
+    return Case.query.filter(Case.status.in_(['error', status])).filter(Case.work_queue == work_queue).order_by(Case.submitted_at).all()
 
 def get_cases_by_title(title_number):
     return Case.query.filter(Case.title_number == title_number).order_by(Case.submitted_at).all()
@@ -67,3 +67,6 @@ def get_next_pending_case():
 
 def get_next_approved_case():
     return Case.query.filter_by(status='approved').order_by(Case.submitted_at).first()
+
+def get_case(case_id):
+    return Case.query.filter_by(id=case_id).first()
