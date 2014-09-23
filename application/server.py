@@ -19,14 +19,14 @@ def casework_post():
     try:
         case = service.save_case(request.get_json())
     except IntegrityError:
-        print 'Failed to save'
+        logger.error('Failed to save')
         return jsonify({"status": "failed to save casework item"}), 400
     except KeyError as e:
         logger.error(e.message)
-        print 'Invalid data'
+        logger.error('Invalid data')
         return jsonify({"status": "invalid data"}), 400
     except Exception as e:
-        print 'Unknown error.', e
+        logger.error(e.message)
         return jsonify({"status": "unknown Error"}), 400
 
     return jsonify({"status": "successful", "id": str(case.id)})
