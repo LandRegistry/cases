@@ -17,19 +17,19 @@ def index():
 @app.route('/cases', methods=['POST'])
 def casework_post():
     try:
-        service.save_case(request.get_json())
+        case = service.save_case(request.get_json())
     except IntegrityError:
-        print 'Failed to save'
-        return 'Failed to save casework item.', 400
+        logger.error('Failed to save')
+        return jsonify({"status": "failed to save casework item"}), 400
     except KeyError as e:
         logger.error(e.message)
-        print 'Invalid data'
-        return 'Invalid data', 400
+        logger.error('Invalid data')
+        return jsonify({"status": "invalid data"}), 400
     except Exception as e:
-        print 'Unknown error.', e
-        return 'Unknown error.', 400
+        logger.error(e.message)
+        return jsonify({"status": "unknown Error"}), 400
 
-    return 'Saved case', 200
+    return jsonify({"status": "successful", "id": str(case.id)})
 
 @app.route('/cases', methods=['GET'])
 def get_cases():
@@ -62,6 +62,3 @@ def get_cases_by_queue(status, work_queue):
 @app.route('/cases/property/<title_number>', methods=['GET'])
 def get_cases_by_title(title_number):
     return Response(json.dumps([i.serialize for i in service.get_cases_by_title(title_number)]), mimetype='application/json')
-
-
-
