@@ -24,6 +24,7 @@ def save_case(data):
 
     db.session.add(case)
     db.session.commit()
+    return case
 
 
 def get_case_items():
