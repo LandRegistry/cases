@@ -31,12 +31,20 @@ class Case(db.Model):
             'id': self.id,
             'title_number': self.title_number,
             'application_type': self.application_type,
+            'application_name': self.get_application_name,
             'request_details' : self.request_details,
             'request_details_data' : json.loads((json.loads(self.request_details))['data']),
             'status' : self.status,
             'work_queue' : self.work_queue,
             'submitted_by': self.submitted_by,
-            'submitted_at': datetime.datetime.strftime(self.submitted_at, '%d-%m-%Y %H:%M:%S %f')
+            'submitted_at': datetime.datetime.strftime(self.submitted_at, '%d-%m-%Y %H:%M:%S')
         }
+
+    @property
+    def get_application_name(self):
+        if self.application_type == 'change-name-marriage':
+            return 'Change proprietor name by way of marriage'
+        else:
+            return self.application_type
 
 
