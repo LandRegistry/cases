@@ -1,4 +1,6 @@
 language: python
+addons:
+  postgresql: "9.3"
 python:
 - '2.7'
 install:
@@ -9,7 +11,6 @@ env:
 - SETTINGS=config.TestConfig
 script:
 - source ./environment_test.sh
-- /home/travis/build/LandRegistry/cases/db/create_database.sh
 - py.test --cov application tests/ --cov-report=term --cov-report=html
 after_success:
   - coveralls --ignore-errors
