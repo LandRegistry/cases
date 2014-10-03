@@ -28,9 +28,9 @@ def get_title(search_url, title_number):
 def apply_change(current_title, change):
     logger.info('Dealing with: %s' % type(change))
     old_name = change['proprietor_full_name']
-    proprietors = current_title['proprietors']
+    proprietors = current_title['proprietorship']['fields']['proprietors']
     for x in proprietors:
-        if x['full_name'] == old_name:
-            x['full_name'] = change['proprietor_new_full_name']
+        if x['name']['full_name'] == old_name:
+            x['name']['full_name'] = change['proprietor_new_full_name']
             return current_title
     return None
