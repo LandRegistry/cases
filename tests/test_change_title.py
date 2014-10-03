@@ -1,8 +1,15 @@
 import unittest
-from application.modify_titles import apply_change
+import responses
+from application.server import app
+from application.modify_titles import apply_change, get_title
+from stub_json import response_json
 
+TITLE_NUMBER = "TEST198"
 
 class TestChangeTitleCase(unittest.TestCase):
+    def setUp(self):
+        self.search_url = 'http://nowhere/'
+        self.client = app.test_client()
 
     def test_change_title(self):
         name_to_change = "Hank Schrader"
@@ -22,11 +29,20 @@ class TestChangeTitleCase(unittest.TestCase):
 
     def _proprietor_model(self, full_name):
         return {"proprietorship" :
-             {"template" : "PROPRIETOR(S):  *RP*",
-              "full_text": "PROPRIETOR(S): Michael Jones of 8 Miller Way, Plymouth, Devon, PL6 8UQ",
-              "fields" : {"proprietors":[{"name" : {"title" : "Mr", "full_name" : full_name, "decoration" : ""}, "address" : {"full_address": "8 Miller Way, Plymouth, Devon, PL6 8UQ", "house_no" : "8", "street_name" : "Miller Way", "town" : "Plymouth", "postal_county" : "Devon", "region_name" : "", "country" : "", "postcode":""}},
-                                         {"name" : {"title" : "Mrs", "full_name" : "Betty Jones", "decoration" : ""}, "address" : {"full_address": "8 Miller Way, Plymouth, Devon, PL6 8UQ", "house_no" : "8", "street_name" : "Miller Way", "town" : "Plymouth", "postal_county" : "Devon", "region_name" : "", "country" : "", "postcode":""}}]},
-              "deeds" : [],
-              "notes" : []
-             }
+                    {"template" : "PROPRIETOR(S):  *RP*",
+                     "full_text": "PROPRIETOR(S): Michael Jones of 8 Miller Way, Plymouth, Devon, PL6 8UQ",
+                     "fields" : {"proprietors":[{"name" : {"title" : "Mr", "full_name" : full_name, "decoration" : ""}, "address" : {"full_address": "8 Miller Way, Plymouth, Devon, PL6 8UQ", "house_no" : "8", "street_name" : "Miller Way", "town" : "Plymouth", "postal_county" : "Devon", "region_name" : "", "country" : "", "postcode":""}},
+                                                {"name" : {"title" : "Mrs", "full_name" : "Betty Jones", "decoration" : ""}, "address" : {"full_address": "8 Miller Way, Plymouth, Devon, PL6 8UQ", "house_no" : "8", "street_name" : "Miller Way", "town" : "Plymouth", "postal_county" : "Devon", "region_name" : "", "country" : "", "postcode":""}}]},
+                     "deeds" : [],
+                     "notes" : []
+                    }
         }
+
+    @responses.activate
+    def test_get_title(self):
+        responses.add(responses.GET, '%s/auth/titles/%s' % (self.search_url, TITLE_NUMBER),
+                      body=response_json, status=200, content_type='application/json')
+
+        resp = get_title(self.search_url, TITLE_NUMBER)
+        assert resp['title_number'] == TITLE_NUMBER
+
