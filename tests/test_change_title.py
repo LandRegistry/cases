@@ -1,5 +1,6 @@
 import unittest
-from application.modify_titles import apply_change
+import datetime
+from application.modify_titles import apply_change, apply_edition_date
 
 
 class TestChangeTitleCase(unittest.TestCase):
@@ -30,3 +31,18 @@ class TestChangeTitleCase(unittest.TestCase):
               "notes" : []
              }
         }
+
+    def test_apply_edition_date_when_the_key_exist(self):
+        mod_date = '01-01-2014 10:09:30'
+        current_title = {"created_ts": mod_date, "other": "values", "foo":"bar"}
+        under_test = apply_edition_date(current_title)
+
+        self.assertNotEquals(under_test['created_ts'], mod_date)
+        self.assertLessEqual(datetime.datetime.strptime(under_test['created_ts'], '%d-%m-%Y %H:%M:%S'), datetime.datetime.utcnow(), '%d-%m-%Y %H:%M:%S')
+
+
+    def test_apply_edition_date_when_the_key_does_not_exist(self):
+        current_title = {"other": "values", "foo":"bar"}
+        under_test = apply_edition_date(current_title)
+
+        self.assertLessEqual(datetime.datetime.strptime(under_test['created_ts'], '%d-%m-%Y %H:%M:%S'), datetime.datetime.utcnow(), '%d-%m-%Y %H:%M:%S')

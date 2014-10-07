@@ -1,6 +1,8 @@
+import datetime
 import logging
 import requests
 from werkzeug.exceptions import abort
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -34,3 +36,9 @@ def apply_change(current_title, change):
             x['name']['full_name'] = change['proprietor_new_full_name']
             return current_title
     return None
+
+def apply_edition_date(title):
+    modification_date = datetime.datetime.utcnow()
+    title['created_ts'] = datetime.datetime.strftime(modification_date, '%d-%m-%Y %H:%M:%S')
+
+    return title
