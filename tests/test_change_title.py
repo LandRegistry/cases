@@ -1,13 +1,9 @@
 import unittest
-<<<<<<< HEAD
 import responses
 from application.server import app
-from application.modify_titles import apply_change, get_title
+from application.modify_titles import apply_change, get_title, apply_edition_date
 from stub_json import response_json
-=======
 import datetime
-from application.modify_titles import apply_change, apply_edition_date
->>>>>>> master
 
 TITLE_NUMBER = "TEST198"
 
@@ -29,9 +25,7 @@ class TestChangeTitleCase(unittest.TestCase):
         name_to_change = "Hank Schrader"
         current_title = self._proprietor_model(name_to_change)
         change_data = {"confirm": "true", "partner_name": "Jane", "application_type": "change-name-marriage", "marriage_country": "GB", "proprietor_new_full_name": "Hank Bond", "marriage_place": "London", "title_number": "TEST1411556289670", "proprietor_full_name": "Hank", "marriage_certificate_number": "NOWAY", "marriage_date": 1406847600}
-<<<<<<< HEAD
         underTest = apply_change(current_title, change_data)
-        print underTest
         self.assertEquals(underTest, None)
 
     @responses.activate
@@ -42,9 +36,6 @@ class TestChangeTitleCase(unittest.TestCase):
         resp = get_title(self.search_url, TITLE_NUMBER)
         assert resp['title_number'] == TITLE_NUMBER
 
-=======
-        under_test = apply_change(current_title, change_data)
-        self.assertEquals(under_test, None)
 
     def _proprietor_model(self, full_name):
         return {"proprietorship" :
@@ -71,4 +62,3 @@ class TestChangeTitleCase(unittest.TestCase):
         under_test = apply_edition_date(current_title)
 
         self.assertLessEqual(datetime.datetime.strptime(under_test['created_ts'], '%d-%m-%Y %H:%M:%S'), datetime.datetime.utcnow(), '%d-%m-%Y %H:%M:%S')
->>>>>>> master
