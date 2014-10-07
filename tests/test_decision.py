@@ -6,10 +6,10 @@ from application.decision import Decision
 
 class TestDecisionCase(unittest.TestCase):
     CASE = {'action': 'change-name-marriage', 'data':
-        '{"confirm": true, "partner_name": "Jane", "application_type": "change-name-marriage", '
-        '"marriage_country": "GB", "proprietor_new_full_name": "Bob", "marriage_place": "London", '
-        '"title_number": "TEST1412604722719", "proprietor_full_name": "Hank Bond", '
-        '"marriage_certificate_number": "Nono", "marriage_date": 1388534400}',
+            '{"confirm": true, "partner_name": "Jane", "application_type": "change-name-marriage", '
+            '"marriage_country": "GB", "proprietor_new_full_name": "Bob", "marriage_place": "London", '
+            '"title_number": "TEST1412604722719", "proprietor_full_name": "Hank Bond", '
+            '"marriage_certificate_number": "Nono", "marriage_date": 1388534400}',
             'context': {'session-id': '123456', 'transaction-id': 'ABCDEFG'}}
 
     @responses.activate
@@ -23,3 +23,4 @@ class TestDecisionCase(unittest.TestCase):
         resp = self.decision.post(self.CASE)
 
         assert resp.status_code == 200
+
