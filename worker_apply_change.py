@@ -41,9 +41,9 @@ def submit_change_to_mint(case):
         changed_title = apply_change(title, json.loads(d['data']))
 
         logger.debug("Sending case to mint to apply change: %s for title:%s" % (case.id, d))
-        logger.debug("changed title: %s" % changed_title)
         if changed_title:
-            response = mint.post(mint_url, changed_title, case.title_number)
+            changed_title_with_mod_date = apply_edition_date(changed_title)
+            response = mint.post(mint_url, changed_title_with_mod_date, case.title_number)
             logger.info("mint response:: %s" % response.status_code)
             if response and response.status_code / 100 == 2:
                 service.update_case_with_status(case_id, 'completed')
