@@ -1,5 +1,6 @@
-cov-core
-coverage
-py
-pytest
-pytest-cov
+cov-core==1.13.0
+coverage==3.7.1
+py==1.4.21
+pytest==2.5.2
+pytest-cov==1.7.0
+responses==0.2.2
