@@ -18,9 +18,10 @@ class TestDecisionCase(unittest.TestCase):
         self.decision.api = 'http://nowhere/decisions'
 
         responses.add(responses.POST, self.decision.api,
-                      body=json.dumps({"status": "200"}), status=200, content_type='application/json')
+                      body=json.dumps({"url": "http://casework-frontend.landregistry.local/casework", "status": "200"}),
+                      status=200, content_type='application/json')
 
         resp = self.decision.post(self.CASE)
 
-        assert resp.status_code == 200
+        self.assertTrue("casework" in resp)
 
