@@ -42,7 +42,7 @@ def submit_change_to_mint(case):
 
         logger.debug("Sending case to mint to apply change: %s for title:%s" % (case.id, d))
         if changed_title:
-            changed_title_with_mod_date = apply_edition_date(changed_title)
+            changed_title_with_mod_date = apply_edition_date(changed_title, case.serialize['submitted_at'])
             response = mint.post(mint_url, changed_title_with_mod_date, case.title_number)
             logger.info("mint response:: %s" % response.status_code)
             if response and response.status_code / 100 == 2:
