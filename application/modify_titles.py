@@ -39,6 +39,6 @@ def apply_change(current_title, change):
 
 def apply_edition_date(title):
     modification_date = datetime.datetime.utcnow()
-    title['created_ts'] = datetime.datetime.strftime(modification_date, '%d-%m-%Y %H:%M:%S')
+    title['edition_date'] = datetime.datetime.strftime(modification_date, '%d-%m-%Y')
 
     return title
