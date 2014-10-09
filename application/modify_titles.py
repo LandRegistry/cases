@@ -1,4 +1,5 @@
 import datetime
+import dateutil.parser
 import logging
 import requests
 from werkzeug.exceptions import abort
@@ -37,8 +38,8 @@ def apply_change(current_title, change):
             return current_title
     return None
 
-def apply_edition_date(title):
-    modification_date = datetime.datetime.utcnow()
-    title['edition_date'] = datetime.datetime.strftime(modification_date, '%d-%m-%Y')
+def apply_edition_date(title, submitted_at):
+    title['edition_date'] = datetime.datetime.strftime(dateutil.parser.parse(submitted_at), '%Y-%m-%d')
+    title['last_application'] = submitted_at
 
     return title
