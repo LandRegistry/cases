@@ -16,4 +16,5 @@ requests
 SQLAlchemy
 Werkzeug
 wsgiref
-python-dateutil
+aniso8601
+

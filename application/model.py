@@ -15,7 +15,7 @@ class Case(db.Model):
     request_details = db.Column(TEXT)
     status = db.Column(db.String(100))
     work_queue = db.Column(db.String(100))
-    submitted_at = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    submitted_at = db.Column(db.DateTime(timezone = True), default=datetime.datetime.utcnow)
     submitted_by = db.Column(db.String(200))
 
     @property
@@ -37,7 +37,7 @@ class Case(db.Model):
             'status' : self.status,
             'work_queue' : self.work_queue,
             'submitted_by': self.submitted_by,
-            'submitted_at': datetime.datetime.strftime(self.submitted_at, '%d-%m-%Y %H:%M:%S')
+            'submitted_at': self.submitted_at.strftime("%Y-%m-%dT%H:%M:%S.%f%Z")
         }
 
     @property

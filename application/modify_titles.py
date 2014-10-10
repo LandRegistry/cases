@@ -1,5 +1,5 @@
 import datetime
-import dateutil.parser
+import aniso8601
 import logging
 import requests
 from werkzeug.exceptions import abort
@@ -39,7 +39,9 @@ def apply_change(current_title, change):
     return None
 
 def apply_edition_date(title, submitted_at):
-    title['edition_date'] = datetime.datetime.strftime(dateutil.parser.parse(submitted_at), '%Y-%m-%d')
+    dt = aniso8601.parse_datetime(submitted_at)
+
+    title['edition_date'] =  dt.strftime('%Y-%m-%d')
     title['last_application'] = submitted_at
 
     return title

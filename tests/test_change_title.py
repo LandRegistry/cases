@@ -62,7 +62,8 @@ class TestChangeTitleCase(unittest.TestCase):
 
     def test_apply_edition_date_when_the_key_does_not_exist(self):
         current_title = {"other": "values", "foo":"bar"}
-        now =  datetime.datetime.utcnow()
-        under_test = apply_edition_date(current_title, str(now))
+        now = '2014-02-20T09:03:10.000+01:00'
+        under_test = apply_edition_date(current_title, now)
 
-        self.assertEquals(under_test['edition_date'], datetime.datetime.strftime(now, '%Y-%m-%d'))
+        self.assertEquals(under_test['edition_date'], '2014-02-20')
+        self.assertEquals(under_test['last_application'], now)
