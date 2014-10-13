@@ -9,20 +9,17 @@ from application import db
 class Case(db.Model):
     __tablename__ = 'cases'
 
+    def utcnow(self):
+        return timezone('UTC').localize(datetime.datetime.utcnow())
+
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column(db.String(64), nullable=False)
     application_type = db.Column(db.String(50), nullable=False)
     request_details = db.Column(TEXT)
     status = db.Column(db.String(100))
     work_queue = db.Column(db.String(100))
-    submitted_at = db.Column(db.DateTime(timezone = True), default=datetime.datetime.utcnow)
+    submitted_at = db.Column(db.DateTime(timezone = True), default=utcnow)
     submitted_by = db.Column(db.String(200))
-
-    @property
-    def submitted_at_bst(self):
-        utc = timezone('UTC').localize(self.submitted_at)
-        bst = timezone('Europe/London').localize(self.submitted_at)
-        return bst + (utc - bst)
 
     @property
     def serialize(self):
@@ -46,5 +43,6 @@ class Case(db.Model):
             return 'Change proprietor name by way of marriage'
         else:
             return self.application_type
+
 
 
