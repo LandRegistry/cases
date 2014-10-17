@@ -23,3 +23,7 @@ class CasesServerTestCase(unittest.TestCase):
 
         rv = self.client.get('/')
         self.assertEqual(rv.status, '200 OK')
+
+    def test_health(self):
+        response = self.client.get('/health')
+        self.assertEqual(response.status, '200 OK')
