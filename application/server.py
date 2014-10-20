@@ -1,7 +1,7 @@
 import json
 import logging
 
-from flask import request, jsonify, make_response, Response
+from flask import request, jsonify, Response
 from sqlalchemy.exc import IntegrityError
 
 from application import app, service
@@ -35,6 +35,7 @@ def casework_post():
 def get_cases():
     return Response(json.dumps([i.serialize for i in service.get_case_items()]), mimetype='application/json')
 
+
 @app.route('/cases/<case_id>', methods=(['PUT']))
 def update_work_queue_for_case(case_id):
     try:
@@ -54,6 +55,7 @@ def complete_case(case_id):
     if not service.update_case_with_status(case_id, new_status='approved'):
         return 'Approval of the case: %s was not successful.' % case_id, 400
     return 'OK', 200
+
 
 @app.route('/cases/<status>/<work_queue>', methods=['GET'])
 def get_cases_by_queue(status, work_queue):
