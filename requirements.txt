@@ -17,4 +17,4 @@ SQLAlchemy==0.9.8
 Werkzeug==0.9.6
 wsgiref==0.1.2
 aniso8601==0.83
--e git+https://github.com/Runscope/healthcheck.git@9d661a916f3ab630ae21e014758aa2f21fd40097#egg=healthcheck
+healthcheck==0.2

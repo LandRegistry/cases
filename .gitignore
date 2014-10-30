@@ -4,4 +4,4 @@
 *.iml
 dev/
 htmlcov/
-.coverage	
+.coverage
