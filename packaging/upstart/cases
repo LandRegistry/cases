@@ -1,0 +1,14 @@
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+setuid vagrant
+
+script
+    chdir /opt/alpha/cases
+    . bin/activate
+    . ./environment.sh
+    exec ./bin/gunicorn -c gunicorn_config.py application.server:app
+end script
+
