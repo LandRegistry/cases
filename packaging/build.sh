@@ -2,20 +2,20 @@
 set -xe
 
 export VERSION=0.1
-export INSTALL_DIR=opt/alpha/cases # change this to somewhere better
+export INSTALL_DIR=opt/alpha/cases # change this to somewhere better if you can think of one
 
-# build the python installable distribution of service-frontend
+# build the python installable distribution of cases app
 cd ../
 python setup.py sdist
 cd -
 
-# make a virtualenv to install matching and healtcheck distribution packages
+# make a virtualenv to install cases distribution package
 mkdir -p build/$INSTALL_DIR
 virtualenv build/$INSTALL_DIR
 
 build/$INSTALL_DIR/bin/pip install -U pip distribute
 
-# install matching and healtcheck package to virtualenv
+# install cases package to virtualenv
 build/$INSTALL_DIR/bin/pip install ../dist/*
 
 build/$INSTALL_DIR/bin/pip uninstall -y distribute
@@ -34,7 +34,7 @@ cd -
 
 cd build
 
-# build the deb package from the virtualenv containing matching and all dependencies
+# build the deb package from the virtualenv containing cases and all dependencies
 fpm \
     -t deb -s dir -a all -n cases -v $VERSION \
     --after-install ../debian/postinst \
