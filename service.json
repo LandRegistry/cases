@@ -1,0 +1,16 @@
+{
+  "name": "cases",
+  "type": "back-end",
+  "github": "https://github.com/LandRegistry/cases",
+  "heroku": "lr-cases",
+  "url": null,
+  "port": null,
+  "database": "true",
+  "tech": [
+    "python",
+    "flask"
+  ],
+  "dependencies": [
+    "postgres"
+  ]
+}
